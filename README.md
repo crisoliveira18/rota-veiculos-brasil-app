@@ -1,73 +1,167 @@
-# Welcome to your Lovable project
 
-## Project info
+# Nova Rota Veículos
 
-**URL**: https://lovable.dev/projects/3fd7d6d3-dd37-4d7d-8057-4faa33646402
+Sistema completo de gestão de veículos para locação, desenvolvido com React, TypeScript, Vite e Capacitor para geração de APK Android.
 
-## How can I edit this code?
+## 🚀 Funcionalidades
 
-There are several ways of editing your application.
+### Dashboard
+- Métricas em tempo real (veículos disponíveis, contratos ativos, pagamentos pendentes)
+- Gráficos de receita mensal
+- Visão geral do negócio
 
-**Use Lovable**
+### Gestão de Clientes
+- Cadastro completo com CPF/CNPJ, CNH, contato e endereço
+- Histórico de locações e multas
+- Busca e edição de dados
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/3fd7d6d3-dd37-4d7d-8057-4faa33646402) and start prompting.
+### Gestão de Veículos
+- Cadastro com marca, modelo, ano, placa, quilometragem
+- Status: disponível, ocupado, manutenção
+- Histórico de manutenções
 
-Changes made via Lovable will be committed automatically to this repo.
+### Contratos
+- Criação automática de cronograma de pagamentos semanais
+- Formato: "Nome do Cliente - Número" (ex: "João Silva - 001")
+- Status: ativo, vencido, finalizado
+- Visualização completa do cronograma de pagamentos
 
-**Use your preferred IDE**
+### Sistema de Pagamentos
+- Registro manual de pagamentos (PIX, dinheiro, transferência)
+- Cronograma com parcelas: pagas, a vencer, vencidas
+- Aplicação automática de multas e juros por atraso
+- Relatórios financeiros
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+### Multas
+- Registro por veículo ou contrato
+- Atribuição automática ao cliente
+- Controle de status (pendente/pago)
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+### Impostos
+- Gestão de IPVA, Taxa de Licenciamento e DPVAT
+- Controle de vencimentos e pagamentos
+- Organização por veículo e ano
 
-Follow these steps:
+### Manutenções
+- Agendamento com dados da oficina e mecânico
+- Orçamentos e previsão de entrega
+- Status: agendado, em andamento, concluído
 
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
+### Configuração de Multas e Juros
+- Definição de percentual de multa por atraso
+- Configuração de juros diários
+- Aplicação automática nas parcelas vencidas
 
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
+## 🛠️ Tecnologias
 
-# Step 3: Install the necessary dependencies.
-npm i
+- **Frontend**: React 18, TypeScript, Vite
+- **UI**: Tailwind CSS, shadcn/ui
+- **Gráficos**: Recharts
+- **Ícones**: Lucide React
+- **Roteamento**: React Router DOM
+- **Mobile**: Capacitor (para APK Android)
+- **Armazenamento**: localStorage (sem dependência de backend)
 
-# Step 4: Start the development server with auto-reloading and an instant preview.
+## 📱 Geração do APK Android
+
+### Pré-requisitos
+- Node.js (versão 18+)
+- Android Studio
+- Java Development Kit (JDK 11+)
+
+### Instruções para gerar o APK
+
+1. **Clone o projeto do GitHub**
+   ```bash
+   git clone <seu-repositorio>
+   cd nova-rota-veiculos
+   ```
+
+2. **Instale as dependências**
+   ```bash
+   npm install
+   ```
+
+3. **Build do projeto**
+   ```bash
+   npm run build
+   ```
+
+4. **Adicionar plataforma Android**
+   ```bash
+   npx cap add android
+   ```
+
+5. **Sincronizar arquivos**
+   ```bash
+   npx cap sync android
+   ```
+
+6. **Abrir no Android Studio**
+   ```bash
+   npx cap open android
+   ```
+
+7. **No Android Studio:**
+   - Aguarde a sincronização do Gradle
+   - Vá em `Build > Build Bundle(s) / APK(s) > Build APK(s)`
+   - O APK será gerado em `android/app/build/outputs/apk/debug/`
+
+### Alternativa via linha de comando
+```bash
+cd android
+./gradlew assembleDebug
+```
+
+## 🔧 Desenvolvimento
+
+### Executar localmente
+```bash
+npm install
 npm run dev
 ```
 
-**Edit a file directly in GitHub**
+### Build para produção
+```bash
+npm run build
+```
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+### Preview da build
+```bash
+npm run preview
+```
 
-**Use GitHub Codespaces**
+## 📚 Estrutura do Projeto
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+```
+src/
+├── components/          # Componentes reutilizáveis
+├── pages/              # Páginas da aplicação
+├── services/           # Serviços de armazenamento (localStorage)
+├── types/              # Definições TypeScript
+├── utils/              # Funções utilitárias
+└── hooks/              # Hooks customizados
+```
 
-## What technologies are used for this project?
+## 💾 Armazenamento de Dados
 
-This project is built with:
+O aplicativo utiliza localStorage para persistir todos os dados, incluindo:
+- Clientes, veículos, contratos
+- Pagamentos e multas
+- Impostos e manutenções
+- Configurações de multa e juros
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+Todos os dados são salvos localmente no dispositivo, não dependendo de conexão com internet após o primeiro carregamento.
 
-## How can I deploy this project?
+## 🎨 Design
 
-Simply open [Lovable](https://lovable.dev/projects/3fd7d6d3-dd37-4d7d-8057-4faa33646402) and click on Share -> Publish.
+Interface otimizada para dispositivos móveis com:
+- Navegação por abas na parte inferior
+- Cards informativos e intuitivos
+- Cores profissionais (azul e cinza)
+- Responsividade completa
+- Toques e gestos otimizados para tela de celular
 
-## Can I connect a custom domain to my Lovable project?
+## 📄 Licença
 
-Yes, you can!
-
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
-
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/tips-tricks/custom-domain#step-by-step-guide)
+Este projeto foi desenvolvido para Nova Rota Veículos.

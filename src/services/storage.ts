@@ -21,7 +21,10 @@ const STORAGE_KEYS = {
   CONFIG_MULTA_JUROS: 'nova_rota_config_multa_juros'
 };
 
-// Generic storage functions
+function generateId(): string {
+  return Date.now().toString(36) + Math.random().toString(36).substr(2);
+}
+
 function saveToStorage<T>(key: string, data: T[]): void {
   localStorage.setItem(key, JSON.stringify(data));
 }
@@ -31,7 +34,7 @@ function loadFromStorage<T>(key: string): T[] {
   return data ? JSON.parse(data) : [];
 }
 
-// Clientes
+// Serviços individuais mantidos para compatibilidade
 export const clienteService = {
   getAll: (): Cliente[] => loadFromStorage<Cliente>(STORAGE_KEYS.CLIENTES),
   save: (cliente: Cliente): void => {
@@ -53,7 +56,6 @@ export const clienteService = {
   }
 };
 
-// Veículos
 export const veiculoService = {
   getAll: (): Veiculo[] => loadFromStorage<Veiculo>(STORAGE_KEYS.VEICULOS),
   save: (veiculo: Veiculo): void => {
@@ -75,7 +77,6 @@ export const veiculoService = {
   }
 };
 
-// Contratos
 export const contratoService = {
   getAll: (): Contrato[] => loadFromStorage<Contrato>(STORAGE_KEYS.CONTRATOS),
   save: (contrato: Contrato): void => {
@@ -97,7 +98,6 @@ export const contratoService = {
   }
 };
 
-// Pagamentos
 export const pagamentoService = {
   getAll: (): Pagamento[] => loadFromStorage<Pagamento>(STORAGE_KEYS.PAGAMENTOS),
   save: (pagamento: Pagamento): void => {
@@ -119,7 +119,6 @@ export const pagamentoService = {
   }
 };
 
-// Multas
 export const multaService = {
   getAll: (): Multa[] => loadFromStorage<Multa>(STORAGE_KEYS.MULTAS),
   save: (multa: Multa): void => {
@@ -138,7 +137,6 @@ export const multaService = {
   }
 };
 
-// Impostos
 export const impostoService = {
   getAll: (): Imposto[] => loadFromStorage<Imposto>(STORAGE_KEYS.IMPOSTOS),
   save: (imposto: Imposto): void => {
@@ -157,9 +155,17 @@ export const impostoService = {
   }
 };
 
-// Manutenções
 export const manutencaoService = {
-  getAll: (): Manutencao[] => loadFromStorage<Manutencao>(STORAGE_KEYS.MANUTENCOES),
+  getAll: (): Manutencao[] => {
+    const data = localStorage.getItem(STORAGE_KEYS.MANUTENCOES);
+    if (!data) return [];
+    const manutencoes = JSON.parse(data);
+    return manutencoes.map((m: any) => ({
+      ...m,
+      dataAgendamento: new Date(m.dataAgendamento),
+      previsaoEntrega: new Date(m.previsaoEntrega)
+    }));
+  },
   save: (manutencao: Manutencao): void => {
     const manutencoes = manutencaoService.getAll();
     const index = manutencoes.findIndex(m => m.id === manutencao.id);
@@ -168,15 +174,14 @@ export const manutencaoService = {
     } else {
       manutencoes.push(manutencao);
     }
-    saveToStorage(STORAGE_KEYS.MANUTENCOES, manutencoes);
+    localStorage.setItem(STORAGE_KEYS.MANUTENCOES, JSON.stringify(manutencoes));
   },
   delete: (id: string): void => {
     const manutencoes = manutencaoService.getAll().filter(m => m.id !== id);
-    saveToStorage(STORAGE_KEYS.MANUTENCOES, manutencoes);
+    localStorage.setItem(STORAGE_KEYS.MANUTENCOES, JSON.stringify(manutencoes));
   }
 };
 
-// Configuração Multa e Juros
 export const configMultaJurosService = {
   get: (): ConfiguracaoMultaJuros => {
     const config = localStorage.getItem(STORAGE_KEYS.CONFIG_MULTA_JUROS);
@@ -185,4 +190,75 @@ export const configMultaJurosService = {
   save: (config: ConfiguracaoMultaJuros): void => {
     localStorage.setItem(STORAGE_KEYS.CONFIG_MULTA_JUROS, JSON.stringify(config));
   }
+};
+
+// Interface unificada para compatibilidade
+export const storageService = {
+  getClientes: clienteService.getAll,
+  addCliente: (clienteData: Omit<Cliente, 'id'>) => {
+    const cliente: Cliente = {
+      ...clienteData,
+      id: generateId()
+    };
+    clienteService.save(cliente);
+    return cliente;
+  },
+  updateCliente: (id: string, clienteData: Omit<Cliente, 'id'>) => {
+    const cliente: Cliente = { ...clienteData, id };
+    clienteService.save(cliente);
+    return cliente;
+  },
+  deleteCliente: clienteService.delete,
+
+  getVeiculos: veiculoService.getAll,
+  addVeiculo: (veiculoData: Omit<Veiculo, 'id'>) => {
+    const veiculo: Veiculo = {
+      ...veiculoData,
+      id: generateId()
+    };
+    veiculoService.save(veiculo);
+    return veiculo;
+  },
+  updateVeiculo: (id: string, veiculoData: Omit<Veiculo, 'id'>) => {
+    const veiculo: Veiculo = { ...veiculoData, id };
+    veiculoService.save(veiculo);
+    return veiculo;
+  },
+  deleteVeiculo: veiculoService.delete,
+
+  getContratos: contratoService.getAll,
+  addContrato: (contratoData: Omit<Contrato, 'id'>) => {
+    const contrato: Contrato = {
+      ...contratoData,
+      id: generateId()
+    };
+    contratoService.save(contrato);
+    return contrato;
+  },
+  updateContrato: (id: string, contratoData: Omit<Contrato, 'id'>) => {
+    const contrato: Contrato = { ...contratoData, id };
+    contratoService.save(contrato);
+    return contrato;
+  },
+  deleteContrato: contratoService.delete,
+
+  getManutencoes: manutencaoService.getAll,
+  addManutencao: (manutencaoData: Omit<Manutencao, 'id'>) => {
+    const manutencao: Manutencao = {
+      ...manutencaoData,
+      id: generateId()
+    };
+    manutencaoService.save(manutencao);
+    return manutencao;
+  },
+  updateManutencao: (id: string, manutencaoData: Omit<Manutencao, 'id'>) => {
+    const manutencao: Manutencao = { ...manutencaoData, id };
+    manutencaoService.save(manutencao);
+    return manutencao;
+  },
+  deleteManutencao: manutencaoService.delete,
+
+  getPagamentos: pagamentoService.getAll,
+  getMultas: multaService.getAll,
+  getImpostos: impostoService.getAll
 };

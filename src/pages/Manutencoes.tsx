@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { Plus, Edit, Trash2, Search, Calendar, Wrench } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -26,7 +27,7 @@ const Manutencoes: React.FC = () => {
     orcamento: '',
     dataAgendamento: '',
     previsaoEntrega: '',
-    status: 'agendado' as const
+    status: 'agendado' as Manutencao['status']
   });
 
   useEffect(() => {
@@ -271,7 +272,7 @@ const Manutencoes: React.FC = () => {
                 <Label htmlFor="status">Status</Label>
                 <Select
                   value={formData.status}
-                  onValueChange={(value: 'agendado' | 'em_andamento' | 'concluido') => 
+                  onValueChange={(value: Manutencao['status']) => 
                     setFormData({...formData, status: value})
                   }
                 >

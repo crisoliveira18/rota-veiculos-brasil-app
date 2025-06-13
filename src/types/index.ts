@@ -19,6 +19,8 @@ export interface Veiculo {
   km: number;
   status: 'disponivel' | 'ocupado' | 'manutencao';
   dataCadastro: string;
+  manutencoes: string[];
+  multas: string[];
 }
 
 export interface Contrato {
@@ -29,7 +31,7 @@ export interface Contrato {
   dataInicio: string;
   dataFim: string;
   valorSemanal: number;
-  diaVencimento: number; // 0-6 (domingo-sábado)
+  diaVencimento: number;
   status: 'ativo' | 'vencido' | 'finalizado';
   observacoes?: string;
   dataCriacao: string;
@@ -74,15 +76,16 @@ export interface Imposto {
 export interface Manutencao {
   id: string;
   veiculoId: string;
+  tipo: string;
+  descricao: string;
   oficina: string;
   mecanico: string;
   endereco: string;
   telefone: string;
   orcamento: number;
-  servicos: string;
-  previsaoEntrega: string;
+  dataAgendamento: Date;
+  previsaoEntrega: Date;
   status: 'agendado' | 'em_andamento' | 'concluido';
-  dataAgendamento: string;
 }
 
 export interface ConfiguracaoMultaJuros {

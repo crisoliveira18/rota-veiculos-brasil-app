@@ -19,7 +19,7 @@ const Veiculos: React.FC = () => {
     ano: '',
     placa: '',
     km: '',
-    status: 'disponivel' as const
+    status: 'disponivel' as Veiculo['status']
   });
 
   useEffect(() => {
@@ -41,6 +41,7 @@ const Veiculos: React.FC = () => {
       placa: formData.placa,
       km: parseInt(formData.km),
       status: formData.status,
+      dataCadastro: new Date().toISOString(),
       manutencoes: [],
       multas: []
     };
@@ -181,7 +182,7 @@ const Veiculos: React.FC = () => {
                 <Label htmlFor="status">Status</Label>
                 <Select
                   value={formData.status}
-                  onValueChange={(value: 'disponivel' | 'ocupado' | 'manutencao') => 
+                  onValueChange={(value: Veiculo['status']) => 
                     setFormData({...formData, status: value})
                   }
                 >
